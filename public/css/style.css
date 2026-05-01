@@ -1,0 +1,21 @@
+    /* منع التفاف النص في العناوين لضمان مظهر احترافي */
+    .student-table th {
+        white-space: nowrap;
+        background-color: #212529; /* لون داكن يتناسب مع نظام إسناد */
+    }
+
+    /* تحسين شكل التمرير (Scrollbar) ليصبح أنيقاً */
+    .table-responsive::-webkit-scrollbar {
+        height: 8px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #ced4da;
+        border-radius: 10px;
+    }
+    
+    /* ميزة الطباعة: إخفاء التمرير عند الطباعة */
+    @media print {
+        .table-responsive {
+            overflow: visible !important;
+        }
+    }
