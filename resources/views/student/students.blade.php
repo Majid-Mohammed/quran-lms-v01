@@ -20,6 +20,7 @@
                         </button>
                     </div>
                 </div>
+                
                 <div class="card border-0 shadow-sm rounded-3 p-0 bg-body-tertiary text-start report-card print-container">
                     
                     <div class="report-header p-3 text-white rounded-top-3 bg-dark d-flex justify-content-between align-items-center">
@@ -32,8 +33,40 @@
                             <small class="opacity-75">{{ date('Y/m/d') }}</small>
                         </div>
                     </div>
-                    <div class="table-responsive m-3">
-                        <table class="table project-list-table table-nowrap align-middle table-borderless">
+                    <form id="financialFilterForm" class="filter-form row g-1 align-items-end me-3 ms-3 pt-1">
+                        @if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Manager')
+                            <div class="col-md-2"> 
+                                <select name="branch_id" class="form-select form-select-sm">
+                                    <option value="">كل الفروع</option>
+                                    @foreach(\App\Models\Branch::all() as $branch)
+                                        <option value="{{ $branch->id }}" >{{ $branch->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <div class="col-md-3 d-none"> 
+                                <select name="branch_id" class="form-select form-select-sm">
+                                    <option value="0">كل الفروع</option>
+                                    @foreach(\App\Models\Branch::all() as $branch)
+                                        <option value="{{ $branch->id }}" {{ auth()->user()->branch_id == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        <div class="col-md-4 d-flex gap-1">
+                            <button type="button" id="resetFilters" class="btn btn-secondary btn-sm w-">
+                                <i class="bi bi-arrow-repeat"></i> تحديث
+                            </button> 
+                            <button type="submit" onclick="window.print()" class="btn btn-secondary btn-sm w-">
+                                <i class="bi bi-printer"></i>
+                            </button> 
+                            <button type="submit" class="btn btn-secondary btn-sm w-">
+                                <i class="bi bi-book-half"></i> تحويلPDF
+                            </button> 
+                        </div>
+                    </form>
+                    <div class="table-responsive m-3 mt-1">
+                        <table class="table project-list-table student-table table-nowrap align-middle table-borderless">
                             <thead >
                                 <tr class="tr" style="background-color: #aaa;"> 
                                     <th scope="col" style="width: 10px;border-left: 1px solid #ccc; background-color: #ddd">No</th>
@@ -208,6 +241,9 @@
             margin: 0 !important;
             padding: 10px
         }
+        .filter-form {
+            display: none;
+        }
         .edit {
             display: none !important;
         }
@@ -240,5 +276,81 @@
 </style>
 
 
+<script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
+<script>
+    $(document).ready(function() {
+    // مراقبة أي تغيير في أي قائمة منسدلة داخل النموذج
+    $('#financialFilterForm select').on('change', function() {
+        fetchFilteredData();
+    });
+
+    function fetchFilteredData() {
+        // جمع كل البيانات من النموذج
+        let formData = $('#financialFilterForm').serialize();
+        
+        // إظهار تأثير التحميل (Loading) على الجدول (اختياري)
+        $('.student-table').css('opacity', '0.5');
+
+        $.ajax({
+            url: "{{ url()->current() }}", // يرسل الطلب لنفس الصفحة الحالية
+            method: "GET",
+            data: formData,
+            success: function(response) {
+                // استبدال محتوى الجدول فقط بالبيانات الجديدة
+                // تأكد أن الـ Controller يعيد الـ HTML الخاص بالجدول أو استخلص منه الـ tbody
+                let newTableBody = $(response).find('.student-table tbody').html();
+               // let newPagination = $(response).find('.pagination-container').html();
+                
+                $('.student-table tbody').html(newTableBody);
+               // $('.pagination-container').html(newPagination);
+                
+                $('.student-table').css('opacity', '1');
+            },
+            error: function() {
+                alert('حدث خطأ أثناء تحديث البيانات');
+                $('.student-table').css('opacity', '1');
+            }
+        });
+    }
+
+
+    // إعادة تحديد الفلاتر الافتراضية
+    // عند الضغط على زر إعادة التعيين
+    $('#resetFilters').on('click', function() {
+        // 1. إعادة تعيين النموذج (مسح كل الاختيارات)
+        $('#financialFilterForm')[0].reset();
+        
+        // 2. إذا كنت تستخدم select2 أو أي مكتبات خاصة، يفضل التأكد من تصفيرها يدوياً
+        $('#financialFilterForm select').val('').trigger('change.select2');
+
+        // 3. استدعاء دالة جلب البيانات بدون فلاتر (لجلب الكل)
+        fetchFilteredData();
+    });
+
+    // دالة جلب البيانات (تأكد أنها مطابقة لما لديك)
+    function fetchFilteredData() {
+        let formData = $('#financialFilterForm').serialize();
+        $('.student-table').css('opacity', '0.5');
+
+        $.ajax({
+            url: "{{ url()->current() }}",
+            method: "GET",
+            data: formData,
+            success: function(response) {
+                // استبدال محتوى الجدول
+                $('.student-table tbody').html($(response).find('.student-table tbody').html() || response);
+                // تحديث الترقيم
+                $('.pagination-container').html($(response).find('.pagination-container').html());
+                
+                $('.student-table').css('opacity', '1');
+            },
+            error: function() {
+                $('.student-table').css('opacity', '1');
+                console.error("خطأ في تحديث البيانات");
+            }
+        });
+    }
+});
+</script>
 @endsection

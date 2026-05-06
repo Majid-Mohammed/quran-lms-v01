@@ -15,7 +15,7 @@ class StudentController extends Controller
     /**
      * عرض قائمة الطلاب بناءً على صلاحية المستخدم
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -25,7 +25,45 @@ class StudentController extends Controller
         } else {
             $students = Student::with(['branch','guardian'])->where('branch_id', $user->branch_id)->latest()->paginate(50);
         }
+        $latestIds = Student::selectRaw('MAX(id)')->groupBy('id');
+    
+        $query = Student::with(['branch','guardian'])
+            ->whereIn('id', $latestIds);
+
+        if ($user->role !== 'Admin') {
+            $query->where('branch_id', $user->branch_id);
+        }
+    
+        if ($request->branch_id) {
+            $query->where('branch_id', $request->branch_id);
+        }
+
+        $students = $query->latest()->paginate(50)->withQueryString()->appends(request()->except('page'));
+        
+        if ($request->ajax()) {
+            return view('student.students', compact('students'))->render();
+        }
         return view('student.students', compact('students'));
+    }
+
+    public function studentList(Request $request)
+    {
+        $user = Auth::user();
+        $latestIds = Fee::selectRaw('MAX(id)')->groupBy('student_id');
+    
+        $query = Fee::with(['student', 'branch'])
+            ->whereIn('id', $latestIds);
+
+        if ($user->role !== 'Admin') {
+            $query->where('branch_id', $user->branch_id);
+        }
+    
+        if ($request->branch_id) {
+            $query->where('branch_id', $request->branch_id);
+        }
+        if ($request->ajax()) {
+            return view('student.students');
+        }
     }
 
     // عرض نموذج تعديل بيانات الطالب
