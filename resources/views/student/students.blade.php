@@ -33,6 +33,9 @@
                             <small class="opacity-75">{{ date('Y/m/d') }}</small>
                         </div>
                     </div>
+                    @php
+                        $display = '';
+                     @endphp
                     <form id="financialFilterForm" class="filter-form row g-1 align-items-end me-3 ms-3 pt-1">
                         @if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Manager')
                             <div class="col-md-2"> 
@@ -50,10 +53,13 @@
                                     @foreach(\App\Models\Branch::all() as $branch)
                                         <option value="{{ $branch->id }}" {{ auth()->user()->branch_id == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                                     @endforeach
+                                    @php
+                                        $display = 'd-none';
+                                    @endphp
                                 </select>
                             </div>
                         @endif
-                        <div class="col-md-4 d-flex gap-1">
+                        <div class="col-md-4 d-flex gap-1 {{ $display }}">
                             <button type="button" id="resetFilters" class="btn btn-secondary btn-sm w-">
                                 <i class="bi bi-arrow-repeat"></i> تحديث
                             </button> 
