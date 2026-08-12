@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Models\Branch;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,10 +19,10 @@ class TeacherController extends Controller
 
     public function getTeachers(Request $request)
     {
-        // 
+        //
         $user = Auth::user();
         $teacher = Teacher::with('branch');
-
+        $branch = 'الكل';
         if($user->role !== 'Admin'){
             $teacher->where('branch_id', $user->branch_id);
         }
@@ -30,9 +31,9 @@ class TeacherController extends Controller
         }
         if($request->status){
             $teacher->where('status', $request->status);
-        }   
+        }
+        // $branches = Branch::findOrFail($request->branch_id);
         $teacher = $teacher->latest()->paginate(20)->withQueryString()->appends(request()->except('page'));
-
         if ($request->ajax()) {
             return view('teacher.teachers', compact('teacher'))->render();
         }

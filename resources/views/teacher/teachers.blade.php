@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'المستخدمين')
+@section('title', 'المدرسين')
+@section('title2', 'قائمة المدرسين')
 
 @section('content')
 
@@ -64,55 +65,61 @@
                     </div>
                 </form>
                 <div class="table-responsive print-container">
-                    <div class="header-print row align-items-center text-center mb-4 d-none d-print-flex">
-                        <div class="col-3 text-start rounded-3 fw-bold">
-                            <span> المدرسة القرآنية </span>
+                    {{-- <div style="background-colr: #e3e3e3" class="header-print row align-items-center text-center mb-4 border-bottom border-2 p-1 dd-none d-print-flex">
+                        <div class="col-3 text-center rounded-3 fw-bold">
+                            <span> المدرسة القرآنية لتحفيظ القرآن الكريم</span>
                             <br>
                             <span>{{Auth::user()->branch->name ?? ''}}</span>
                         </div>
-                        <div class="col-6 text-center">
-                            <h4 class="fw-bold">قائمة المدرسين {{ auth()->user()->branch_id == $branch->id ? $branchName  : 'كل الفروع' }}</h4>
-                            {{-- <div class="badge bg-primary px-3 py-2">البيانات الأساسية</div> --}}
+                        <div class="col-6 text-center margin-top-0">
+                            <h6 class="margin-top-0 font-size-49">بسم الله الرحمن الرحيم</h6><br>
+                            <h4 class="fw-bold title-print">@yield('title2', '')</h4>
+                            {{-- <div class="badge bg-primary px-3 py-2">البيانات الأساسية</div> --}
                         </div>
                         <div class="col-3 text-start rounded-3">
                             <img src="{{asset('images/logo1.jpeg')}}" alt="Logo" class="img-fluid">
                         </div>
-                    </div>
-                <table class="table teacher-table table-hover align-middle mb-3 student-table ">
-                    
-                    <thead class="table-dark">
-                        <tr>
-                            <th class="text-nowrap">#</th>
-                            <th class="text-nowrap">الاسم</th>
-                            <th class="text-nowrap">البريد الإلكتروني</th>
-                            <th class="text-nowrap">الفرع</th>
-                            <th class="text-nowrap">حالة </th> 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($teacher as $teachers)
-                            <tr class="tr"  
-                                class="student-row-link">
-                                                
-                                <td>{{ $loop->iteration }}</td>
-                                <td class="text-nowrap " style="cursor: pointer;"  onclick="window.location.href='{{ route('teacher.profile', $teachers->id) }}'">{{ $teachers->full_name }}</td>
-                                <td class="text-nowrap ">{{ $teachers->email }}</td> 
-                                <td class="text-nowrap text-center">{{ $teachers->branch->name ?? '-' }}</td>
-                                <td class="text-nowrap text-center">
-                                    <button type="button" class="btn btn-sm toggle-status {{ $teachers->isActive() ? 'btn-success' : 'btn-danger' }}" 
-                                            data-id="{{ $teachers->id }}" title="{{ $teachers->isActive() ? 'توقف المستخدم' : 'تفعيل المستخدم' }}">
-                                        <i class="bi {{ $teachers->isActive() ? 'bi-check-circle' : 'bi-x-circle' }}"></i>
-                                        <span class="status-text">{{ $teachers->isActive() ? 'نشط' : 'غير نشط' }}</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
+                    </div> --}}
+                    @include('partials.header')
+                    <table class="table teacher-table table-hover align-middle mb-3 student-table ">
+                        
+                        <thead class="table-dark">
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">لا يوجد مدرسين حتى الآن</td>
+                                <th class="text-nowrap">#</th>
+                                <th class="text-nowrap">الاسم</th>
+                                <th class="text-nowrap">البريد الإلكتروني</th>
+                                <th class="text-nowrap">الفرع</th>
+                                <th class="text-nowrap">حالة </th> 
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse ($teacher as $teachers)
+                                <tr class="tr"  
+                                    class="student-row-link">
+                                                    
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="text-nowrap " style="cursor: pointer;"  onclick="window.location.href='{{ route('teacher.profile', $teachers->id) }}'">{{ $teachers->full_name }}</td>
+                                    <td class="text-nowrap ">{{ $teachers->email }}</td> 
+                                    <td class="text-nowrap text-center">{{ $teachers->branch->name ?? '-' }}</td>
+                                    <td class="text-nowrap text-center">
+                                        <button type="button" class="btn btn-sm toggle-status {{ $teachers->isActive() ? 'btn-success' : 'btn-danger' }}" 
+                                                data-id="{{ $teachers->id }}" title="{{ $teachers->isActive() ? 'توقف المستخدم' : 'تفعيل المستخدم' }}">
+                                            <i class="bi {{ $teachers->isActive() ? 'bi-check-circle' : 'bi-x-circle' }}"></i>
+                                            <span class="status-text">{{ $teachers->isActive() ? 'نشط' : 'غير نشط' }}</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center py-4 text-muted">لا يوجد مدرسين حتى الآن</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <div class="d-none d-print-flex justify-content-between p-4 border-top mt-auto">
+                            <span class="small text-muted">توقيع المسؤول: ....................</span>
+                            <span class="small text-muted">ختم الفرع .................:</span>
+                        </div>
                 </div>
             </div>
             
@@ -179,6 +186,7 @@
     function fetchFilteredData() {
         // جمع كل البيانات من النموذج
         let formData = $('#financialFilterForm').serialize();
+        //let newTitle = "قائمة المدرسين " + ($('select[name="branch_id"]').find('option:selected').text() || 'كل الفروع') + " - " + ($('select[name="status"]').find('option:selected').text() || 'كل الحالات');
         
         // إظهار تأثير التحميل (Loading) على الجدول (اختياري)
         $('.teacher-table').css('opacity', '0.5');
@@ -191,8 +199,10 @@
                 // استبدال محتوى الجدول فقط بالبيانات الجديدة
                 // تأكد أن الـ Controller يعيد الـ HTML الخاص بالجدول أو استخلص منه الـ tbody
                 let newTableBody = $(response).find('.teacher-table tbody').html();
+                let newTitle = $(response).find('.title-print').html() || "قائمة المدرسين";
                // let newPagination = $(response).find('.pagination-container').html();
                 
+                $('.title-print').html(newTitle);
                 $('.teacher-table tbody').html(newTableBody);
                // $('.pagination-container').html(newPagination);
                 

@@ -1,13 +1,17 @@
+
 @extends('layouts.app')
 
 @section('title', 'الطلاب')
+@section('title2', 'قائمة الطلاب')
 
 @section('content')
 
 <div class="container-fluid px-4 text-start" dir="rtl">
         <div class="row flex-column flex-lg-row">
             @include('partials.calender')
-            <div class="col-12 col-lg-8 main-content-wrapper">
+            <div class="col-12 col-lg-8 main-content-wrapper print-container">
+
+                        @include('partials.header')
                 <div class="d-flex sticky-top justify-content-start mb-3 d-print-none" style="top: 75px; z-index: 1020;">
                     <div id="viewModeButtons">
                         <button type="button" onclick="window.print()" class="btn btn-primary shadow-sm">
@@ -21,7 +25,7 @@
                     </div>
                 </div>
                 
-                <div class="card border-0 shadow-sm rounded-3 p-0 bg-body-tertiary text-start report-card print-container">
+                <div class="card border-0 shadow-sm rounded-3 p-0 bg-body-tertiary text-start report-card ">
                     
                     <div class="report-header p-3 text-white rounded-top-3 bg-dark d-flex justify-content-between align-items-center">
                         <div>
@@ -245,7 +249,7 @@
             top: 0;
             width: 100% !important;
             margin: 0 !important;
-            padding: 10px
+            padding: 40px
         }
         .filter-form {
             display: none;

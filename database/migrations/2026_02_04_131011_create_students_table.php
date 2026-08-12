@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('national_id')->unique(); // السجل المدني أو الهوية
             $table->string('address')->nullable();
             $table->string('student_code')->unique(); // رقم أكاديمي
-            $table->enum('level', ['first', 'second', 'third'])->default('first'); // المستوى الدراسي (مثلاً: الأول الابتدائي)
-
+            $table->enum('level', ['non', 'first', 'second', 'third'])->default('non'); // المستوى الدراسي (مثلاً: الأول الابتدائي)
+            $table->string(surah);
             // إضافة حالة الطالب
             // active: نشط، graduated: خريج، transferred: منقول لفرع آخر
             $table->enum('status', ['active', 'graduated', 'inactive'])->default('active');
