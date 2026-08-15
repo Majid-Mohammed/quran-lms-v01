@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('title', 'Students')
 
@@ -9,8 +9,8 @@
 
 <div class="container-fluid px-4 text-start" dir="rtl">
     <div class="row flex-column flex-lg-row">   
-        @include('partials.calender')
-        <div class="col-12 col-lg-8 main-content-wrapper"> 
+        @include('partials.calender') --}}
+        {{-- <div class="col-12 col-lg-8 main-content-wrapper">  --}}
             {{-- <div class="card border-0 rounded-3 bg-body-tertiary text-start "> 
                 <style>
                     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
@@ -288,7 +288,7 @@
                 </table> --}}
             {{-- </div> --}} 
             
-
+{{-- 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -510,4 +510,1145 @@
 /* تنسيق إضافي لتحسين المظهر على الشاشة */
 .print-container { transition: all 0.3s; }
 </style>
+@endsection --}}
+
+{{-- @extends('layouts.app')
+
+@section('title', 'اضافة طالب')
+
+@section('content')
+
+    <div class="container-fluid px-4 text-start" dir="rtl">
+        <div class="row flex-column flex-lg-row">   
+        @include('partials.calender')
+            <div class="col-12 col-lg-8 main-content-wrapper"> 
+                <div class="card border-0 shadow-sm rounded-3 bg-body-tertiary text-start">
+                    <div class="report-header p-3 text-white mb-2 rounded-top-3 bg-dark d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="fw-bold mb-0"> أضافة بيانات طالب جديد </h4>
+                            <small class="opacity-75">إدارة حلقات التحفيظ</small>
+                        </div>
+                        <div class="text-end">
+                            <h5 class="mb-0 fw-bold view-field"> التاريخ</h5>
+                            <small class="opacity-75">{{ date('Y/m/d') }}</small>
+                        </div>
+                    </div>
+
+                    <!-- Step Indicator -->
+                    <div class="px-3 pt-2">
+                        <ul class="nav nav-pills nav-justified bg-white p-2 rounded border" id="formWizardTab">
+                            <li class="nav-item">
+                                <span class="nav-link active fw-bold" id="tab-step-1">
+                                    <i class="bi bi-person-fill me-1"></i> 1. بيانات الطالب
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-muted fw-bold" id="tab-step-2">
+                                    <i class="bi bi-people-fill me-1"></i> 2. بيانات ولي الأمر
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-responsive">
+                        <div class="formbold-form-wrapper p-3 rounded-3 border mb-2">
+                            <form action="{{route('student.add-student')}}" method="POST" id="studentRegistrationForm">
+                                @csrf
+
+                                <!-- STEP 1: STUDENT DATA -->
+                                <div id="step-1" class="wizard-step">
+                                    <legend class="mb-3 text-primary fw-bold fs-5">بيانات الطالب</legend>
+                                    <div class="border rounded-3 bg-dark bg-opacity-10 p-3">
+                                        <div class="formbold-mb-3 p-2">
+                                            <label for="name" class="formbold-form-label"> اسم الطالب <span class="text-danger">*</span></label>
+                                            <input type="text" name="full_name" id="name" placeholder="الاسم بالكامل" class="formbold-form-input" required/>
+                                        </div>
+                                        <div class="formbold-mb-3 p-2">
+                                            <label for="student_id" class="form-label">رقم الطالب التعريفي <span class="text-danger">*</span></label>
+                                            <div class="input-group formbold-mb-0 rounded-3 border p-0">
+                                                <input type="text" name="student_code" style="border-radius: 0 0.375rem 0.375rem 0; padding: 0.375rem;" id="student_id" class="form-control bg-light" placeholder="اضغط توليد لإنشاء الرقم" readonly required>
+                                                <button class="btn btn-primary" style="border-radius: 0.375rem 0 0 0.375rem; padding: 0.375rem;" type="button" onclick="assignStudentId()">
+                                                    <i class="bi bi-gear-fill me-1"></i> توليد رقم
+                                                </button>
+                                                @error('student_code')
+                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                @enderror
+                                            </div> 
+                                        </div>
+                                        <div class="formbold-mb-1 formbold-pt-3 p-2">
+                                            <div class="flex flex-wrap formbold-mx-3">
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="phone" class="formbold-form-label"> رقم الهاتف </label>
+                                                        <input type="text" name="phone" id="phone" placeholder="رقم الهاتف" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="national_id" class="formbold-form-label"> الرقم الوطني<span class="text-danger">*</span> </label>
+                                                        <input type="number" max="99999999999" name="national_id" id="national_id" placeholder="الرقم الوطني" class="formbold-form-input" required/>
+                                                        @error('national_id')
+                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="address" class="formbold-form-label"> عنوان الطالب <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="address" id="address" placeholder="الولاية - المدينة - الحي" class="formbold-form-input" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="email" class="formbold-form-label"> البريد الإلكتروني </label>
+                                                        <input type="text" name="email" id="email" placeholder="البريد الإلكتروني" class="formbold-form-input" />
+                                                        @error('email')
+                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="gender">الجنس <span class="text-danger">*</span></label>
+                                                        <select name="gender" id="gender" class="formbold-form-input" required>
+                                                            <option value="">------</option>
+                                                            <option value="male">ذكر</option>
+                                                            <option value="female">أنثى</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="branch">الفرع <span class="text-danger">*</span></label>
+                                                        <select name="branch_id" id="branch" class="formbold-form-input" {{ Auth::user()->role !== 'Admin' && Auth::user()->role !== 'Manager' ? 'disabled' : '' }} required>
+                                                            <option value=""> ------ </option> 
+                                                            @if (Auth::user()->role !== 'Admin' && Auth::user()->role !== 'Manager')
+                                                                <option value="{{ Auth::user()->branch_id }}" selected>{{ Auth::user()->branch->name }}</option>
+                                                            @endif
+                                                            @foreach(\App\Models\Branch::all() as $branch)
+                                                                @if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Manager' || Auth::user()->branch_id == $branch->id)
+                                                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="birth_date">تاريخ الميلاد <span class="text-danger">*</span></label>
+                                                        <input type="date" name="birth_date" id="birth_date" placeholder="تاريخ الميلاد" class="formbold-form-input" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="status">الحالة :</label>
+                                                        <select name="status" id="status" class="formbold-form-input" style="padding: 6px">
+                                                            <option value="">------</option>
+                                                            <option value="active">نشط</option>
+                                                            <option value="graduated">متخرج</option>
+                                                            <option value="transferred">منقول</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    
+                                    <div class="w-full mt-3">
+                                        <button type="button" class="formbold-btn bg-primary" onclick="goToStep(2)">
+                                            التالي: بيانات ولي الأمر <i class="bi bi-arrow-left ms-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- STEP 2: GUARDIAN DATA -->
+                                <div id="step-2" class="wizard-step d-none">
+                                    <legend class="mb-3 text-primary fw-bold fs-5">بيانات ولي الأمر</legend>
+                                    
+                                    <!-- Selector for Existing vs New Guardian -->
+                                    <div class="card mb-3 border-secondary-subtle">
+                                        <div class="card-body p-3 bg-light rounded-3">
+                                            <div class="form-check form-check-inline me-3">
+                                                <input class="form-check-input" type="radio" name="guardian_type" id="type_new" value="new" checked onchange="toggleGuardianSelection()">
+                                                <label class="form-check-label fw-bold" for="type_new">إضافة ولي أمر جديد</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="guardian_type" id="type_existing" value="existing" onchange="toggleGuardianSelection()">
+                                                <label class="form-check-label fw-bold" for="type_existing">اختيار ولي أمر مسجل مسبقاً</label>
+                                            </div>
+
+                                            <!-- Dropdown for existing guardians -->
+                                            <div id="existing_guardian_wrapper" class="mt-3 d-none">
+                                                <label for="existing_guardian_id" class="formbold-form-label">اختر ولي الأمر <span class="text-danger">*</span></label>
+                                                <select name="guardian_id" id="existing_guardian_id" class="formbold-form-input select2" onchange="autofillGuardianData(this)">
+                                                    <option value="">-- اختر ولي الأمر من القائمة --</option>
+                                                    @foreach(\App\Models\Guardian::all() as $guardian)
+                                                        <option value="{{ $guardian->id }}" 
+                                                                data-name="{{ $guardian->name }}" 
+                                                                data-phone="{{ $guardian->phone }}" 
+                                                                data-national_id="{{ $guardian->national_id }}" 
+                                                                data-occupation="{{ $guardian->occupation }}" 
+                                                                data-address="{{ $guardian->address }}">
+                                                            {{ $guardian->name }} - {{ $guardian->phone }} (الرقم الوطني: {{ $guardian->national_id }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Guardian Form Fields -->
+                                    <div class="border rounded-3 bg-dark bg-opacity-10 p-3" id="guardian_fields_container">
+                                        <div class="formbold-mb-1 formbold-pt-3 p-2">
+                                            <div class="flex flex-wrap formbold-mx-3">
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_name" class="formbold-form-label"> الاسم <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_name" id="g_name" placeholder="الاسم" class="formbold-form-input" required />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_phone" class="formbold-form-label"> رقم الهاتف<span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_phone" id="g_phone" placeholder="رقم الهاتف" class="formbold-form-input" required />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_national_id" class="formbold-form-label"> الرقم الوطني<span class="text-danger">*</span> </label>
+                                                        <input type="number" max="99999999999" name="g_national_id" id="g_national_id" placeholder="الرقم الوطني" class="formbold-form-input" required />
+                                                        @error('g_national_id')
+                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_occupation" class="formbold-form-label">المهنة : </label>
+                                                        <input type="text" name="g_occupation" id="g_occupation" placeholder="المهنة" class="formbold-form-input" />
+                                                    </div>
+                                                </div> 
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="relation">العلاقة <span class="text-danger">*</span></label>
+                                                        <select name="relation" id="relation" class="formbold-form-input" style="padding: 6px" required>
+                                                            <option value="">------</option>
+                                                            <option value="father">أب</option>
+                                                            <option value="uncle">خال/عم</option> 
+                                                            <option value="grandfather">جد</option>
+                                                            <option value="mother">أم</option>
+                                                            <option value="brother">أخ</option>
+                                                            <option value="sister">اخت</option>
+                                                            <option value="other">أخرى</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_address" class="formbold-form-label"> عنوان ولي الأمر <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_address" id="g_address" placeholder="الولاية - المدينة - الحي" class="formbold-form-input" required />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2 mt-3">
+                                        <button type="button" class="btn btn-secondary w-50 py-2 fw-bold" onclick="goToStep(1)">
+                                            <i class="bi bi-arrow-right me-1"></i> السابق
+                                        </button>
+                                        <button type="submit" class="formbold-btn bg-success w-50">
+                                            تسجيــــل
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: "Inter", Arial, Helvetica, sans-serif;
+    }
+    .formbold-mb-5 {
+        margin-bottom: 10px;
+    }
+    .formbold-pt-3 {
+        padding-top: 12px;
+    }
+    .formbold-main-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px;
+    }
+
+    .formbold-form-wrapper {
+        margin: 0 auto;
+        max-width: 550px;
+        width: 100%;
+        background: white;
+    }
+    .formbold-form-label {
+        display: block;
+        font-weight: 500;
+        font-size: 16px;
+        color: #07074d;
+        margin-bottom: 5px;
+    }
+
+    .formbold-form-input {
+        width: 100%;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+        background: white;
+        font-weight: 500;
+        font-size: 16px;
+        color: #6b7280;
+        outline: none;
+        resize: none;
+    }
+    .formbold-form-input:focus {
+        border-color: #6a64f1;
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .formbold-btn {
+        text-align: center;
+        font-size: 16px;
+        border-radius: 6px;
+        padding: 12px 32px;
+        border: none;
+        font-weight: 600;
+        background-color: #6a64f1;
+        color: white;
+        cursor: pointer;
+    }
+    .formbold-btn:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .formbold-px-3 {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    .flex {
+        display: flex;
+    }
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+    .w-full {
+        width: 100%;
+    }
+    @media (min-width: 540px) {
+        .sm\:w-half {
+            width: 50%;
+        }
+    }
+</style>
+
+<script>
+    function goToStep(step) {
+        // Simple form validation check before advancing to step 2
+        if (step === 2) {
+            const step1Inputs = document.querySelectorAll('#step-1 input[required], #step-1 select[required]');
+            let isValid = true;
+
+            step1Inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    isValid = false;
+                    return false;
+                }
+            });
+
+            if (!isValid) return;
+        }
+
+        // Toggle visibility
+        if (step === 1) {
+            document.getElementById('step-1').classList.remove('d-none');
+            document.getElementById('step-2').classList.add('d-none');
+            
+            document.getElementById('tab-step-1').classList.add('active');
+            document.getElementById('tab-step-1').classList.remove('text-muted');
+            document.getElementById('tab-step-2').classList.remove('active');
+            document.getElementById('tab-step-2').classList.add('text-muted');
+        } else {
+            document.getElementById('step-1').classList.add('d-none');
+            document.getElementById('step-2').classList.remove('d-none');
+
+            document.getElementById('tab-step-2').classList.add('active');
+            document.getElementById('tab-step-2').classList.remove('text-muted');
+            document.getElementById('tab-step-1').classList.remove('active');
+            document.getElementById('tab-step-1').classList.add('text-muted');
+        }
+    }
+
+    function toggleGuardianSelection() {
+        const isExisting = document.getElementById('type_existing').checked;
+        const wrapper = document.getElementById('existing_guardian_wrapper');
+        const gName = document.getElementById('g_name');
+        const gPhone = document.getElementById('g_phone');
+        const gNationalId = document.getElementById('g_national_id');
+        const gAddress = document.getElementById('g_address');
+
+        if (isExisting) {
+            wrapper.classList.remove('d-none');
+            // Make read-only when existing is chosen
+            gName.readOnly = true;
+            gPhone.readOnly = true;
+            gNationalId.readOnly = true;
+            gAddress.readOnly = true;
+        } else {
+            wrapper.classList.add('d-none');
+            // Reset and allow typing for new guardian
+            gName.readOnly = false;
+            gPhone.readOnly = false;
+            gNationalId.readOnly = false;
+            gAddress.readOnly = false;
+
+            gName.value = '';
+            gPhone.value = '';
+            gNationalId.value = '';
+            document.getElementById('g_occupation').value = '';
+            gAddress.value = '';
+            document.getElementById('existing_guardian_id').value = '';
+        }
+    }
+
+    function autofillGuardianData(selectElement) {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        if (selectedOption && selectedOption.value !== '') {
+            document.getElementById('g_name').value = selectedOption.getAttribute('data-name') || '';
+            document.getElementById('g_phone').value = selectedOption.getAttribute('data-phone') || '';
+            document.getElementById('g_national_id').value = selectedOption.getAttribute('data-national_id') || '';
+            document.getElementById('g_occupation').value = selectedOption.getAttribute('data-occupation') || '';
+            document.getElementById('g_address').value = selectedOption.getAttribute('data-address') || '';
+        }
+    }
+</script>
+
+@endsection --}}
+
+@extends('layouts.app')
+
+@section('title', 'اضافة طالب')
+
+@section('content')
+
+    {{-- <div class="container-fluid px-4 text-start" dir="rtl">
+        <div class="row flex-column flex-lg-row">   
+        @include('partials.calender')
+            <div class="col-12 col-lg-8 main-content-wrapper"> 
+                <div class="card border-0 shadow-sm rounded-3 bg-body-tertiary text-start">
+                    <div class="report-header p-3 text-white mb-2 rounded-top-3 bg-dark d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="fw-bold mb-0"> أضافة يبانات طالب جديد </h4>
+                            <small class="opacity-75">إدارة حلقات التحفيظ</small>
+                        </div>
+                        <div class="text-end">
+                            <h5 class="mb-0 fw-bold view-field"> التاريخ</h5>
+                            <small class="opacity-75">{{ date('Y/m/d') }}</small>
+                        </div>
+                    </div>
+                    <div class="form-responsive">
+                        <div class="formbold-form-wrapper p-1 rounded-3 border mb-2">
+                            <form action="{{route('student.add-student')}}" method="POST">
+                                @csrf
+
+                                
+                                <div id="step-student">
+                                    {{-- <legend class="mb-2 text-primary fw-bold">بيانات الطالب</legend> --}
+                                    <div class="border rounded-3 bg-dark bg-opacity-10 p-2">
+                                        <div class="formbold-mb-3 p-2">
+                                            <label for="name" class="formbold-form-label"> اسم الطالب <span class="text-danger">*</span></label>
+                                            <input type="text" name="full_name" id="name" placeholder="الاسم بالكامل" class="formbold-form-input"/>
+                                        </div>
+                                        <div class="formbold-mb-3 p-2">
+                                            <label for="student_id" class="form-label">رقم الطالب التعريفي <span class="text-danger">*</span></label>
+                                            <div class="input-group formbold-mb-0 rounded-3 border p-0">
+                                                <input type="text" name="student_code" style="border-radius: 0 0.375rem 0.375rem 0; padding: 0.375rem;" id="student_id" class="form-control bg-light" placeholder="اضغط توليد لإنشاء الرقم" readonly>
+                                                <button class="btn btn-primary" style="border-radius: 0.375rem 0 0 0.375rem; padding: 0.375rem;" type="button" onclick="assignStudentId()">
+                                                    <i class="bi bi-gear-fill me-1"></i> توليد رقم
+                                                </button>
+                                                @error('student_code')
+                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                @enderror
+                                            </div> 
+                                        </div>
+
+                                        <div class="formbold-mb-1 formbold-pt-3 p-2">
+                                            <div class="flex flex-wrap formbold-mx-3">
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="phone" class="formbold-form-label"> رقم الهاتف </label>
+                                                        <input type="text" name="phone" id="phone" placeholder="رقم الهاتف" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="national_id" class="formbold-form-label"> الرقم الوطني<span class="text-danger">*</span> </label>
+                                                        <input type="number" max="99999999999" name="national_id" id="national_id" placeholder="الرقم الوطني" class="formbold-form-input" />
+                                                        @error('national_id')
+                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="address" class="formbold-form-label"> عنوان الطالب <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="address" id="address" placeholder="الولاية - المدينة - الحي" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="email" class="formbold-form-label"> البريد الإلكتروني </label>
+                                                        <input type="text" name="email" id="email" placeholder="البريد الإلكتروني" class="formbold-form-input" />
+                                                        @error('email')
+                                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="gender">الجنس <span class="text-danger">*</span></label>
+                                                        <select name="gender" id="gender" class="formbold-form-input">
+                                                            <option value="">------</option>
+                                                            <option value="male">ذكر</option>
+                                                            <option value="female">أنثى</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="branch">الفرع <span class="text-danger">*</span></label>
+                                                        <select name="branch_id" id="branch" class="formbold-form-input" {{ Auth::user()->role !== 'Admin' && Auth::user()->role !== 'Manager' ? 'disabled' : '' }}>
+                                                            <option value=""> ------ </option> 
+                                                            @if (Auth::user()->role !== 'Admin' && Auth::user()->role !== 'Manager')
+                                                                <option value="{{ Auth::user()->branch_id }}" selected>{{ Auth::user()->branch->name }}</option>
+                                                            @endif
+                                                            @foreach(\App\Models\Branch::all() as $branch)
+                                                                @if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Manager' || Auth::user()->branch_id == $branch->id)
+                                                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="birth_date">تاريخ الميلاد <span class="text-danger">*</span></label>
+                                                        <input type="date" name="birth_date" id="birth_date" placeholder="تاريخ الميلاد" class="formbold-form-input"/>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="status">الحالة :</label>
+                                                        <select name="status" id="status" class="formbold-form-input" style="padding: 6px">
+                                                            <option value="">------</option>
+                                                            <option value="active">نشط</option>
+                                                            <option value="graduated">متخرج</option>
+                                                            <option value="transferred">منقول</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="w-full p-1 mt-3">
+                                        <button type="button" id="next-to-guardian" class="formbold-btn bg-primary">
+                                            التالي (بيانات ولي الأمر) &larr;
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {{-- STEP 2: GUARDIAN DATA --}
+                                <div id="step-guardian" style="display: none;">
+                                    <legend class="mb-2 text-primary fw-bold">بيانات ولي الامر</legend>
+                                    
+                                    {{-- Existing Guardian Selection --}
+                                    <div class="border rounded-3 bg-light p-3 mb-3">
+                                        <label for="existing_guardian_id" class="formbold-form-label fw-bold">اختر ولي أمر مسجل مسبقاً (اختياري)</label>
+                                        <select name="guardian_id" id="existing_guardian_id" class="formbold-form-input" onchange="toggleGuardianFields(this)">
+                                            <option value="">-- إدخال ولي أمر جديد --</option>
+                                            @foreach(\App\Models\Guardian::all() as $guardian)
+                                                <option value="{{ $guardian->id }}" 
+                                                        data-name="{{ $guardian->name }}" 
+                                                        data-phone="{{ $guardian->phone }}" 
+                                                        data-national_id="{{ $guardian->national_id }}" 
+                                                        data-occupation="{{ $guardian->occupation }}" 
+                                                        data-address="{{ $guardian->address }}">
+                                                    {{ $guardian->name }} (الهاتف: {{ $guardian->phone }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <small class="text-muted mt-1 d-block">إذا كان ولي الأمر مضافاً بالفعل، اختر اسمه وسيتم ملء كافة البيانات تلقائياً.</small>
+                                    </div>
+
+                                    <div class="border rounded-3 bg-dark bg-opacity-10 p-2">
+                                        <div class="formbold-mb-1 formbold-pt-3 p-2">
+                                            <div class="flex flex-wrap formbold-mx-3">
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_name" class="formbold-form-label"> الاسم <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_name" id="g_name" placeholder="الاسم" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_phone" class="formbold-form-label"> رقم الهاتف<span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_phone" id="g_phone" placeholder="رقم الهاتف" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_national_id" class="formbold-form-label"> الرقم الوطني<span class="text-danger">*</span> </label>
+                                                        <input type="number" max="99999999999" name="g_national_id" id="g_national_id" placeholder="الرقم الوطني" class="formbold-form-input" />
+                                                        @error('g_national_id')
+                                                            <div class="invalid-feedback d-block">{{$message}}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_occupation" class="formbold-form-label">المهنة : </label>
+                                                        <input type="text" name="g_occupation" id="g_occupation" placeholder="المهنة" class="formbold-form-input" />
+                                                    </div>
+                                                </div> 
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-5">
+                                                        <label for="g_relation">العلاقة <span class="text-danger">*</span></label>
+                                                        <select name="relation" id="g_relation" class="formbold-form-input" style="padding: 6px">
+                                                            <option value="">------</option>
+                                                            <option value="father">أب</option>
+                                                            <option value="uncle">خال/عم</option> 
+                                                            <option value="grandfather">جد</option>
+                                                            <option value="mother">أم</option>
+                                                            <option value="brother">أخ</option>
+                                                            <option value="sister">اخت</option>
+                                                            <option value="other">أخرى</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_address" class="formbold-form-label"> عنوان ولي الأمر <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_address" id="g_address" placeholder="الولاية - المدينة - الحي" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2 mt-3">
+                                        <button type="button" id="prev-to-student" class="btn btn-secondary w-50 py-2">
+                                            &rarr; السابق
+                                        </button>
+                                        <button type="submit" class="formbold-btn bg-primary w-50">
+                                            تسجيــــل
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: "Inter", Arial, Helvetica, sans-serif;
+    }
+    .formbold-mb-5 {
+        margin-bottom: 10px;
+    }
+    .formbold-pt-3 {
+        padding-top: 12px;
+    }
+    .formbold-main-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px;
+    }
+
+    .formbold-form-wrapper {
+        margin: 0 auto;
+        max-width: 550px;
+        width: 100%;
+        background: white;
+    }
+    .formbold-form-label {
+        display: block;
+        font-weight: 500;
+        font-size: 16px;
+        color: #07074d;
+        margin-bottom: 5px;
+    }
+    .formbold-form-label-2 {
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .formbold-form-input {
+        width: 100%;
+        padding: 3px 12px;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+        background: white;
+        font-weight: 500;
+        font-size: 16px;
+        color: #6b7280;
+        outline: none;
+        resize: none;
+    }
+    .formbold-form-input:focus {
+        border-color: #6a64f1;
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .formbold-btn {
+        text-align: center;
+        font-size: 16px;
+        border-radius: 6px;
+        padding: 14px 32px;
+        border: none;
+        font-weight: 600;
+        background-color: #6a64f1;
+        color: white;
+        width: 100%;
+        cursor: pointer;
+    }
+    .formbold-btn:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .formbold--mx-3 {
+        margin-left: -12px;
+        margin-right: -12px;
+    }
+    .formbold-px-3 {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    .flex {
+        display: flex;
+    }
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+    .w-full {
+        width: 100%;
+    }
+    @media (min-width: 540px) {
+        .sm\:w-half {
+            width: 50%;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stepStudent = document.getElementById('step-student');
+        const stepGuardian = document.getElementById('step-guardian');
+        const nextBtn = document.getElementById('next-to-guardian');
+        const prevBtn = document.getElementById('prev-to-student');
+
+        // Toggle forward
+        nextBtn.addEventListener('click', function () {
+            stepStudent.style.display = 'none';
+            stepGuardian.style.display = 'block';
+        });
+
+        // Toggle back
+        prevBtn.addEventListener('click', function () {
+            stepGuardian.style.display = 'none';
+            stepStudent.style.display = 'block';
+        });
+    });
+
+    // Handle existing guardian select auto-fill
+    function toggleGuardianFields(selectEl) {
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        
+        const gName = document.getElementById('g_name');
+        const gPhone = document.getElementById('g_phone');
+        const gNationalId = document.getElementById('g_national_id');
+        const gOccupation = document.getElementById('g_occupation');
+        const gAddress = document.getElementById('g_address');
+
+        if (selectEl.value !== "") {
+            gName.value = selectedOption.getAttribute('data-name') || '';
+            gPhone.value = selectedOption.getAttribute('data-phone') || '';
+            gNationalId.value = selectedOption.getAttribute('data-national_id') || '';
+            gOccupation.value = selectedOption.getAttribute('data-occupation') || '';
+            gAddress.value = selectedOption.getAttribute('data-address') || '';
+            
+            // Set fields read-only when pre-selected
+            gName.readOnly = true;
+            gPhone.readOnly = true;
+            gNationalId.readOnly = true;
+            gOccupation.readOnly = true;
+            gAddress.readOnly = true;
+        } else {
+            // Reset fields
+            gName.value = '';
+            gPhone.value = '';
+            gNationalId.value = '';
+            gOccupation.value = '';
+            gAddress.value = '';
+
+            gName.readOnly = false;
+            gPhone.readOnly = false;
+            gNationalId.readOnly = false;
+            gOccupation.readOnly = false;
+            gAddress.readOnly = false;
+        }
+    }
+</script> --}}
+<div class="container-fluid px-4 text-start" dir="rtl">
+        <div class="row flex-column flex-lg-row">   
+        @include('partials.calender')
+            <div class="col-12 col-lg-8 main-content-wrapper"> 
+                <div class="card border-0 shadow-sm rounded-3 bg-body-tertiary text-start">
+                    <div class="report-header p-3 text-white mb-2 rounded-top-3 bg-dark d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="fw-bold mb-0"> أضافة يبانات طالب جديد </h4>
+                            <small class="opacity-75">إدارة حلقات التحفيظ</small>
+                        </div>
+                        <div class="text-end">
+                            <h5 class="mb-0 fw-bold view-field"> التاريخ</h5>
+                            <small class="opacity-75">{{ date('Y/m/d') }}</small>
+                        </div>
+                    </div>
+                    <div class="form-responsive">
+                        <div class="formbold-form-wrapper p-1 rounded-3 border mb-2">
+                            <form action="{{route('student.add-student')}}" method="POST">
+                                @csrf
+                                    {{-- <legend class="mb-0 text-primary fw-bold ">بيانات الطالب </legend> --}}
+                                    <div class="border rounded-3 bg-dark bg-opacity-10 p-">
+                                    <div class="formbold-mb-3 p-2">
+                                        <label for="name" class="formbold-form-label"> اسم الطالب <span class="text-danger">*</span></label>
+                                        <input type="text" name="full_name" id="name" placeholder="الاسم بالكامل" class="formbold-form-input"/>
+                                    </div>
+                                    <div class="formbold-mb-3 p-2 ">
+                                        <label for="student_id" class="form-label">رقم الطالب التعريفي <span class="text-danger">*</span></label>
+                                        <div class="input-group formbold-mb-0 rounded-3 border p-0">
+                                            <input type="text" name="student_code" style="border-radius: 0 0.375rem 0.375rem 0; padding: 0.375rem;" id="student_id" class="form-control bg-light " placeholder="اضغط توليد لإنشاء الرقم" readonly>
+                                            <button class="btn btn-primary" style="border-radius: 0.375rem 0 0 0.375rem; padding: 0.375rem;" type="button" onclick="assignStudentId()">
+                                                <i class="bi bi-gear-fill me-1"></i> توليد رقم
+                                            </button>
+                                            @error('student_code')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div> 
+                                    </div>
+                                    {{-- fd --}}
+                                    <div class="formbold-mb-1 formbold-pt-3 p-2">
+                                        <div class="flex flex-wrap formbold-mx-3">
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-1">
+                                                    <label for="phone" class="formbold-form-label"> رقم الهاتف </label>
+                                                    <input type="text" name="phone" id="phone"  placeholder="رقم الهاتف" class="formbold-form-input" />
+                                                </div>
+                                            </div>
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-1" >
+                                                    <label for="national_id" class="formbold-form-label"> الرقم الوطني<span class="text-danger">*</span> </label>
+                                                    <input type="number" max="99999999999" name="national_id" id="national_id"  placeholder="الرقم الوطني" class="formbold-form-input" />
+                                                    @error('national_id')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-1">
+                                                    <label for="address" class="formbold-form-label"> عنوان الطالب <span class="text-danger">*</span> </label>
+                                                    <input type="text" name="address" id="address"  placeholder="الولاية - المدينة - الحي" class="formbold-form-input" />
+                                                </div>
+                                            </div>
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-1">
+                                                    <label for="email" class="formbold-form-label"> البريد الإلكتروني </label>
+                                                    <input type="text" name="email" id="email"  placeholder="البريد الإلكتروني" class="formbold-form-input" />
+                                                    @error('email')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-5">
+                                                    <label for="gender">الجنس <span class="text-danger">*</span></label>
+                                                    <select name="gender" id="gender" class="formbold-form-input">
+                                                        <option value="">------</option>
+                                                        <option value="male">ذكر</option>
+                                                        <option value="female">أنثى</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-5">
+                                                    <label for="branch">الفرع <span class="text-danger">*</span></label>
+                                                    <select name="branch_id" id="branch" class="formbold-form-input" {{ Auth::user()->role !== 'Admin' && Auth::user()->role !== 'Manager' ? 'disabled' : '' }}>
+                                                        <option value=""> ------ </option> 
+                                                        @if (Auth::user()->role !== 'Admin' && Auth::user()->role !== 'Manager')
+                                                            <option value="{{ Auth::user()->branch_id }}" selected>{{ Auth::user()->branch->name }}</option>
+                                                        @endif
+                                                        @foreach(\App\Models\Branch::all() as $branch)
+                                                            @if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Manager' || Auth::user()->branch_id == $branch->id)
+                                                            
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-5">
+                                                    <label for="birth_date">تاريخ الميلاد <span class="text-danger">*</span></label>
+                                                    <input type="date" name="birth_date" id="birth_date" placeholder="تاريخ الميلاد" class="formbold-form-input"/>
+                                                </div>
+                                            </div>
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-5">
+                                                    <label for="status">الحالة :</label>
+                                                    <select name="status" id="status" class="formbold-form-input" style="padding: 6px">
+                                                        <option value="">------</option>
+                                                        <option value="active">نشط</option>
+                                                        <option value="graduated">متخرج</option>
+                                                        <option value="transferred">منقول</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div> 
+                                    
+                                    <legend class="mb-0 text-primary fw-bold mt-3">بيانات ولي الامر </legend>
+                                    
+                                    {{-- خيار اختيار ولي أمر موجود --}}
+                                    <div class="border rounded-3 bg-light p-2 my-2">
+                                        <label for="existing_guardian_id" class="formbold-form-label fw-bold">اختيار ولي أمر مسجل مسبقاً (اختياري)</label>
+                                        <select name="guardian_id" id="existing_guardian_id" class="formbold-form-input" onchange="toggleGuardianFields(this)">
+                                            <option value="">-- إدخال ولي أمر جديد --</option>
+                                            @foreach(\App\Models\Guardian::all() as $guardian)
+                                                <option value="{{ $guardian->id }}">
+                                                    {{ $guardian->name }} (الهاتف: {{ $guardian->phone }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="border rounded-3 bg-dark bg-opacity-10 p-">
+                                    <div class="formbold-mb-1 formbold-pt-3 p-2">
+                                        <div class="flex flex-wrap formbold-mx-3">
+
+                                            {{-- حقول إدخال ولي أمر جديد (سيتم إخفائها عند تحديد ولي أمر موجود) --}}
+                                            <div id="new-guardian-fields" class="w-full flex flex-wrap">
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_name" class="formbold-form-label"> الاسم <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_name" id="g_name" placeholder="الاسم" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_phone" class="formbold-form-label"> رقم الهاتف<span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_phone" id="g_phone" placeholder="رقم الهاتف" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_national_id" class="formbold-form-label"> الرقم الوطني<span class="text-danger">*</span> </label>
+                                                        <input type="number" max="99999999999" name="g_national_id" id="g_national_id" placeholder="الرقم الوطني" class="formbold-form-input" />
+                                                        @error('g_national_id')
+                                                            <div class="invalid-feedback">{{$message}}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_occupation" class="formbold-form-label">المهنة : </label>
+                                                        <input type="text" name="g_occupation" id="g_occupation" placeholder="المهنة" class="formbold-form-input" />
+                                                    </div>
+                                                </div> 
+                                                <div class="w-full sm:w-half formbold-px-3">
+                                                    <div class="formbold-mb-1">
+                                                        <label for="g_address" class="formbold-form-label"> عنوان ولي الأمر <span class="text-danger">*</span> </label>
+                                                        <input type="text" name="g_address" id="g_address" placeholder="الولاية - المدينة - الحي" class="formbold-form-input" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {{-- حقل صلة القرابة (يبقى دائماً ظاهراً) --}}
+                                            <div class="w-full sm:w-half formbold-px-3">
+                                                <div class="formbold-mb-5">
+                                                    <label for="g_relation" class="formbold-form-label">العلاقة <span class="text-danger">*</span></label>
+                                                    <select name="relation" id="g_relation" class="formbold-form-input" style="padding: 6px">
+                                                        <option value="">------</option>
+                                                        <option value="father">أب</option>
+                                                        <option value="uncle">خال/عم</option> 
+                                                        <option value="grandfather">جد</option>
+                                                        <option value="mother">أم</option>
+                                                        <option value="brother">أخ</option>
+                                                        <option value="sister">اخت</option>
+                                                        <option value="other">أخرى</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                <div class="w-full p- mt-1">
+                                    <button class="formbold-btn bg-primary">تسجيــــل</button>
+                                </div> 
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: "Inter", Arial, Helvetica, sans-serif;
+    }
+    .formbold-mb-5 {
+        margin-bottom: 10px;
+    }
+    .formbold-pt-3 {
+        padding-top: 12px;
+    }
+    .formbold-main-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px;
+    }
+
+    .formbold-form-wrapper {
+        margin: 0 auto;
+        max-width: 550px;
+        width: 100%;
+        background: white;
+    }
+    .formbold-form-label {
+        display: block;
+        font-weight: 500;
+        font-size: 16px;
+        color: #07074d;
+        margin-bottom: 5px;
+    }
+    .formbold-form-label-2 {
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .formbold-form-input {
+        width: 100%;
+        padding: 3px 12px;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+        background: white;
+        font-weight: 500;
+        font-size: 16px;
+        color: #6b7280;
+        outline: none;
+        resize: none;
+    }
+    .formbold-form-input:focus {
+        border-color: #6a64f1;
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .formbold-btn {
+        text-align: center;
+        font-size: 16px;
+        border-radius: 6px;
+        padding: 14px 32px;
+        border: none;
+        font-weight: 600;
+        background-color: #6a64f1;
+        color: white;
+        width: 100%;
+        cursor: pointer;
+    }
+    .formbold-btn:hover {
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .formbold--mx-3 {
+        margin-left: -12px;
+        margin-right: -12px;
+    }
+    .formbold-px-3 {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    .flex {
+        display: flex;
+    }
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+    .w-full {
+        width: 100%;
+    }
+    @media (min-width: 540px) {
+        .sm\:w-half {
+            width: 50%;
+        }
+    }
+</style>
+
+<script>
+    function toggleGuardianFields(selectEl) {
+        const newGuardianFields = document.getElementById('new-guardian-fields');
+        if (selectEl.value !== "") {
+            // إخفاء الحقول عند اختيار ولي أمر مسبق
+            newGuardianFields.style.display = 'none';
+        } else {
+            // إظهار الحقول عند اختيار ولي أمر جديد
+            newGuardianFields.style.display = 'flex';
+        }
+    }
+</script>
+
 @endsection
