@@ -86,7 +86,7 @@ class ManagerController extends Controller
                 // For now, I'll just use 'reports.index' as a placeholder
                 'route' => 'reports.index',
             ]];
-            return view('manager.dashboard', compact('menuItems'));
+            return view('/manager.dashboard', compact('menuItems'));
     }
             
 }
