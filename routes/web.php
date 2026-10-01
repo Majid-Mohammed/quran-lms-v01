@@ -71,7 +71,7 @@ Route::middleware(['auth', 'role:Register|Manager|Admin'])->prefix('/register')-
 
 Route::middleware(['auth', 'role:Manager|Admin'])->prefix('/manager')->group(function () {
     // Manager-specific routes
-    Route::get('/dashboard', [ManagerController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [ManagerController::class, 'index'])->name('manager.dashboard');
     
     Route::redirect('/users', 'users/users-list');
 
